@@ -1,0 +1,43 @@
+Demographics : {
+
+        "age_at_scan_months": "Age at scan",
+        "gestational_age_weeks": "Gestation",
+        "sex_at_birth": "Child Sex at Birth",
+        "birth_weight_kg": "Birth Weight",
+        "birth_length_cm": "Birth Length",
+        "birth_hc_cm" : "Birth Head Circumference",
+
+        "current_height_cm": "Height at scan",
+        "current_weight_kg": "Weight at scan",
+        "current_hc_cm": "Head Circumference at scan (measured)",
+}
+
+SES : { 
+        "family_size_at_scan": "Family Size (at scan)",
+        "num_children_in_family": "Number of Children in Family",
+        "num_children_in_household": "Number of Children in Household",
+        "num_adults_in_household": "Number of Adults in Household",
+
+        "birth_order": "Birth Ordinal",
+        
+        "country_of_birth": "Country of Birth / Home",
+        "city_of_birth": "City of Birth / Home",
+
+        "maternal_age_at_birth": "Maternal age at child birth",
+        "maternal_education_years": "Maternal education (yrs)",
+        
+        "father_owns_cellphone": "Father owns a cell phone at scan",
+        "mother_owns_cellphone": "Mother owns a cell phone at scan"
+        }
+
+Cognitive : { 
+        "child_health_group": "Child Health Grouping",
+        "gsed_composite_score": "GSED Composite Score",
+        "gsed_psychosocial_score": "GSED Psychosocial Score (total score)",
+        "gsed_daz": "GSED DAZ Score",
+        "apgar_1_score": "APGAR 1 Score",
+        "apgar_5_score": "APGAR 5 Score",
+        "bayley_cognitive_score": "Bayley Cognitive Score",
+        "bayley_language_score": "Bayley Language Score",
+        "bayley_motor_score": "Bayley Motor Score"
+        }
