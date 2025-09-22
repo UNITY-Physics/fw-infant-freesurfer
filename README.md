@@ -1,6 +1,6 @@
-# recon-all-clinical
+# infant-recon-all
 
-This gear runs recon-all-clinical which wraps SynthSR & SynthSeg tools ( https://github.com/BBillot/SynthSeg ) available in Freesurfer version 7.4.1. This is the out-of-the-box version that runs convolutiona neural networks for segmentation. 
+This gear runs infant-freesurfer available in Freesurfer version 8.1.0 (Ubuntu22). This is the out-of-the-box version that runs convolutiona neural networks for segmentation.
 
 ## Overview
 
