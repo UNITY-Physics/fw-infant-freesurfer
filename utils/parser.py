@@ -51,8 +51,17 @@ def parse_config(context):
 
     print("Input label: ", input_label)
 
-    age, age_source = get_age(session, input_container)
-    print(f"Age: {age} (source: {age_source})")
+    # -------------------  Get Age -------------------  #
+    age = context.config.get("age")
+    # if age is not None:
+    #     print(f"Using age from config: {age} months")
+    # else:
+    #     print("No age provided in config, attempting to extract from metadata...")
+    #     # If no age provided, attempt to extract from metadata
+    #     # Get the age from the session or subject metadata
+    #     # If age is not found, raise an error
+    #     age, age_source = get_age(session, input_container)
+    #     print(f"Age: {age} (source: {age_source})")
 
     # gear_inputs, 
     return subject_label, session_label, input_label, age

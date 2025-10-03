@@ -8,8 +8,14 @@
 # Define directory names and containers
 
 subject=$1
-session=$2
-age=$3
+session="${2// /_}" # replace spaces with underscores
+input_age=$3
+num_threads=$4
+base_filename=${subject}_${session}
+
+echo "file base name: $base_filename"
+echo "input age: $input_age"
+
 
 FLYWHEEL_BASE=/flywheel/v0
 INPUT_DIR=$FLYWHEEL_BASE/input/
@@ -17,38 +23,22 @@ OUTPUT_DIR=$FLYWHEEL_BASE/output
 WORKDIR=$FLYWHEEL_BASE/work
 CONFIG_FILE=$FLYWHEEL_BASE/config.json
 CONTAINER='[flywheel/infant_recon-all]'
-source /usr/local/freesurfer/SetUpFreeSurfer.sh
 
-echo "permissions"
-ls -ltra /flywheel/v0/
+export FREESURFER_HOME=/usr/local/freesurfer/8.1.0
+export SUBJECTS_DIR=$WORKDIR  # or wherever you want outputs
+source $FREESURFER_HOME/SetUpFreeSurfer.sh
+
+# Force correct Perl environment for Flywheel
+export PATH=$FREESURFER_HOME/mni/bin:$PATH
+export PERL5LIB=$FREESURFER_HOME/mni/share/perl5
+
+
+echo "============================="
+# echo "permissions"
+# ls -ltra /flywheel/v0/
 
 mkdir $FLYWHEEL_BASE/work
 chmod 777 $FLYWHEEL_BASE/work
-##############################################################################
-# Parse configuration
-function parse_config {
-
-  CONFIG_FILE=$FLYWHEEL_BASE/config.json
-  MANIFEST_FILE=$FLYWHEEL_BASE/manifest.json
-
-  if [[ -f $CONFIG_FILE ]]; then
-    echo "$(cat $CONFIG_FILE | jq -r '.config.'$1)"
-  else
-    CONFIG_FILE=$MANIFEST_FILE
-    echo "$(cat $MANIFEST_FILE | jq -r '.config.'$1'.default')"
-  fi
-}
-
-# define output choise:
-config_output_nifti="$(parse_config 'output_nifti')"
-config_output_mgh="$(parse_config 'output_mgh')"
-config_rob="$(parse_config 'robust')"
-
-##############################################################################
-# Define brain and face templates
-
-brain_template=$FLYWHEEL_BASE/talairach_mixed_with_skull.gca
-face_template=$FLYWHEEL_BASE/face.gca
 
 ##############################################################################
 # Handle INPUT file
@@ -73,43 +63,28 @@ else
 fi
 
 ##############################################################################
-# Run mri_synthseg algorithm
-
 # Set initial exit status
 exit_status=0
 
-
-# if [[ $config_rob == 'true' ]]; then
-#   robust='--robust'
-# fi
+# Read config file for options
+config_newborn=$(jq -r '.config.newborn' $CONFIG_FILE)
+if [[ $config_newborn == 'true' ]]; then
+  age='--newborn'
+else
+  age="--age $input_age"
+fi
 
 # Run infant_recon_all with options
 if [[ -e $input_file ]]; then
-  echo "Running infant_recon_all..."
-  
-  tcsh /usr/local/freesurfer/bin/infant_recon_all --s $input_file --age ${age}  
+  echo "Running infant_recon_all on $input_file"
+  /usr/local/freesurfer/8.1.0/bin/infant_recon_all -s $base_filename -i $input_file $age
   exit_status=$?
 fi
 
-# Step 3: Copy output files to the output directory
-#mri_convert $WORKDIR/$base_filename/mri/synthseg.mgz $OUTPUT_DIR/synthseg.nii
-cp $WORKDIR/$base_filename/stats/synthseg.vol.csv $WORKDIR/synthseg.vol.csv
-cp $WORKDIR/$base_filename/stats/synthseg.qc.csv $WORKDIR/synthseg.qc.csv
-mri_convert --out_orientation RAS $WORKDIR/$base_filename/mri/synthSR.mgz $WORKDIR/synthSR.nii.gz
-mri_convert --out_orientation RAS $WORKDIR/$base_filename/mri/aparc+aseg.mgz $WORKDIR/aparc+aseg.nii.gz
+# Organize output files
 zip -r $OUTPUT_DIR/$base_filename.zip $WORKDIR/$base_filename
-
-
-# Step 4: Extract cortical thickness measures
-# Set SUBJECTS_DIR to the work directory
-export SUBJECTS_DIR=$WORKDIR
-aparcstats2table --subjects $base_filename --hemi lh --meas thickness --parc=aparc --tablefile=$WORKDIR/aparc_lh.csv
-aparcstats2table --subjects $base_filename --hemi rh --meas thickness --parc=aparc --tablefile=$WORKDIR/aparc_rh.csv
-
-# Step 5: Extract area measures
-aparcstats2table --subjects $base_filename --hemi lh --meas area --parc=aparc --tablefile=$WORKDIR/aparc_area_lh.csv
-aparcstats2table --subjects $base_filename --hemi rh --meas area --parc=aparc --tablefile=$WORKDIR/aparc_area_rh.csv
-
+mri_convert --out_orientation RAS $WORKDIR/$base_filename/mri/norm.mgz ${OUTPUT_DIR}/${base_filename}_desc-norm.nii.gz
+cp $WORKDIR/$base_filename/mri/aseg.nii.gz $OUTPUT_DIR/${base_filename}_desc-aseg_dseg.nii.gz
 
 # Handle Exit status
 if [[ $exit_status == 0 ]]; then
