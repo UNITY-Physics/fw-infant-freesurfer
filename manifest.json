@@ -1,7 +1,7 @@
 {
   "author": "Niall Bourke",
   "cite": "Z\u00f6llei, L, Iglesias, JE, Ou, Y, Grant, PR, Fischl,B. Infant FreeSurfer: An automated segmentation and surface extraction pipeline for T1-weighted neuroimaging data of infants 0-2 years, NeuroImage, 2020, 116946, https://doi.org/10.1016/j.neuroimage.2020.116946.",
-  "command": "python3 /flywheel/v0/run.py",
+  "command": "bash /flywheel/v0/start.sh",
   "config": {
     "age": {
       "default": null,
@@ -38,7 +38,7 @@
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/infant-freesurfer:1.0.5"
+      "image": "flywheel/infant-freesurfer:1.0.6"
     },
     "kcl-app-binary": "app/main.sh",
     "kcl-app-modalities": [
@@ -64,7 +64,7 @@
     "FLYWHEEL": "/flywheel/v0",
     "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
     "LANG": "C.UTF-8",
-    "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PATH": "/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
     "PYTHON_GET_PIP_SHA256": "fa6f3fb93cce234cd4e8dd2beb54a51ab9c247653b52855a48dd44e6b21ff28b",
     "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/c20b0cfd643cd4a19246ccf204e2997af70f6b21/public/get-pip.py",
     "PYTHON_PIP_VERSION": "21.2.3",
@@ -90,7 +90,8 @@
     "MINC_LIB_DIR": "/usr/local/freesurfer/mni/lib",
     "MNI_DATAPATH": "/usr/local/freesurfer/mni/data",
     "FSLDIR": "/opt/conda",
-    "PYTHONPATH": "/flywheel/v0:"
+    "PYTHONPATH": "/flywheel/v0:",
+    "FSL_CONDA_CHANNEL": "https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/public"
   },
   "inputs": {
     "api-key": {
@@ -109,5 +110,5 @@
   "name": "infant-freesurfer",
   "source": "https://surfer.nmr.mgh.harvard.edu/fswiki/infantFS",
   "url": "https://github.com/UNITY-Physics/fw-infant-freesurfer",
-  "version": "1.0.5"
+  "version": "1.0.6"
 }

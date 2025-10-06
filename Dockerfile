@@ -38,10 +38,34 @@ RUN pip3 install flywheel-gear-toolkit && \
     pip3 install pandas  && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
+# FSL setup
+# Install Miniconda
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh
+
+# Set up environment variables
+ENV CONDA_DIR=/opt/conda
+ENV PATH="${CONDA_DIR}/bin:${PATH}"
+ENV FSL_CONDA_CHANNEL="https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/public"
+
+# Accept Anaconda Terms of Service (needed for repo.anaconda.com)
+RUN /opt/conda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+    /opt/conda/bin/conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
+# Install tini and FSL packages from FSL’s public conda channel
+RUN /opt/conda/bin/conda install -n base -y -c conda-forge tini && \
+    /opt/conda/bin/conda install -n base -y -c ${FSL_CONDA_CHANNEL} -c conda-forge fsl-base fsl-utils fsl-avwutils
+
+# Define FSLDIR so tools know where to find FSL binaries
+ENV FSLDIR=/opt/conda
+
+
 # Configure entrypoint
 RUN bash -c 'chmod +rx $FLYWHEEL/run.py' && \
+    bash -c 'chmod +rx $FLYWHEEL/start.sh' && \
     bash -c 'chmod +rx $FLYWHEEL/app/' && \
     bash -c 'chmod +rx ${FLYWHEEL}/app/main.sh' && \
     bash -c 'chmod +rx -R /usr/local/freesurfer/8.1.0/*'
 
-ENTRYPOINT ["python3", "/flywheel/v0/run.py"] 
+ENTRYPOINT ["bash", "/flywheel/v0/start.sh"] 

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash 
 
 GEAR=fw-infant-freesurfer
-IMAGE=flywheel/infant-freesurfer:1.0.4
-LOG=infant-freesurfer-1.0.4-68dfc9a53d44fcf419984c46
+IMAGE=flywheel/infant-freesurfer:1.0.5
+LOG=infant-freesurfer-1.0.5-68dfd97ad582c4bc28ca2806
 user=/Users/nbourke/GD/atom/
 
 # Command:
