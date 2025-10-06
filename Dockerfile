@@ -32,11 +32,6 @@ RUN apt-get clean && \
         python3-wheel && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install flywheel-gear-toolkit && \
-    pip3 install flywheel-sdk && \
-    pip3 install jsonschema && \
-    pip3 install pandas  && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # FSL setup
 # Install Miniconda
@@ -60,6 +55,12 @@ RUN /opt/conda/bin/conda install -n base -y -c conda-forge tini && \
 # Define FSLDIR so tools know where to find FSL binaries
 ENV FSLDIR=/opt/conda
 
+# Since conda installs a new python, we need to reinstall the python dependencies
+RUN pip3 install flywheel-gear-toolkit && \
+    pip3 install flywheel-sdk && \
+    pip3 install jsonschema && \
+    pip3 install pandas  && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 
 # Configure entrypoint
 RUN bash -c 'chmod +rx $FLYWHEEL/run.py' && \

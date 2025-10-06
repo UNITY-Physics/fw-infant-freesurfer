@@ -38,7 +38,7 @@
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/infant-freesurfer:1.0.6"
+      "image": "flywheel/infant-freesurfer:1.0.7"
     },
     "kcl-app-binary": "app/main.sh",
     "kcl-app-modalities": [
@@ -110,5 +110,5 @@
   "name": "infant-freesurfer",
   "source": "https://surfer.nmr.mgh.harvard.edu/fswiki/infantFS",
   "url": "https://github.com/UNITY-Physics/fw-infant-freesurfer",
-  "version": "1.0.6"
+  "version": "1.0.7"
 }
