@@ -7,8 +7,6 @@ import subprocess
 
 # import flywheel functions
 from flywheel_gear_toolkit import GearToolkitContext
-from utils.command_line import exec_command
-from utils.parser import parse_config
 from shared.utils.curate_output import demo
 from utils.join_data import housekeeping
 
@@ -78,12 +76,10 @@ def main(context: GearToolkitContext) -> None:
     print("Running command:", ' '.join(command))
     subprocess.run(command, check=True)
 
-    # command = "/flywheel/v0/app/main.sh"
-    # # Add the input path and age to the command
-    # command = f"{command} {subject_label} \"{session_label}\" {age} {num_threads}"
-    # exec_command(command,shell=True,cont_output=True)
+    # Add demographic data to the output
+    print("adding demographics to output...")
+    housekeeping(demographics)
 
-    # housekeeping(demographics)
 
 # Only execute if file is run as main, not when imported by another module
 if __name__ == "__main__":  # pragma: no cover

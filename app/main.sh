@@ -86,6 +86,20 @@ zip -r $OUTPUT_DIR/$base_filename.zip $WORKDIR/$base_filename
 mri_convert --out_orientation RAS $WORKDIR/$base_filename/mri/norm.mgz ${OUTPUT_DIR}/${base_filename}_desc-norm.nii.gz
 cp $WORKDIR/$base_filename/mri/aseg.nii.gz $OUTPUT_DIR/${base_filename}_desc-aseg_dseg.nii.gz
 
+# Step 4: Extract cortical thickness measures
+# Set SUBJECTS_DIR to the work directory
+export SUBJECTS_DIR=$WORKDIR
+aparcstats2table --subjects $base_filename --hemi lh --meas thickness --parc=aparc --tablefile=$WORKDIR/aparc_lh.csv
+aparcstats2table --subjects $base_filename --hemi rh --meas thickness --parc=aparc --tablefile=$WORKDIR/aparc_rh.csv
+
+# Step 5: Extract area measures
+aparcstats2table --subjects $base_filename --hemi lh --meas area --parc=aparc --tablefile=$WORKDIR/aparc_area_lh.csv
+aparcstats2table --subjects $base_filename --hemi rh --meas area --parc=aparc --tablefile=$WORKDIR/aparc_area_rh.csv
+
+# Step 6: Extract volume measures
+aparcstats2table --subjects $base_filename --hemi lh --meas volume --parc=aparc --tablefile=$WORKDIR/aparc_volume_lh.csv
+aparcstats2table --subjects $base_filename --hemi rh --meas volume --parc=aparc --tablefile=$WORKDIR/aparc_volume_rh.csv
+
 # Handle Exit status
 if [[ $exit_status == 0 ]]; then
   echo -e "${CONTAINER} Success!"
